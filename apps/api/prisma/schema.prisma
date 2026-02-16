@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Claim {
+  id           String   @id @default(uuid())
+  claimNumber  String   @unique
+  lob          String
+  policyNumber String
+  insuredName  String
+  lossDate     DateTime
+  lossType     String
+  description  String
+  contactEmail String
+  priority     String
+  status       String   @default("SUBMITTED")
+  assignedTo   String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  events       ClaimEvent[]
+}
+
+model ClaimEvent {
+  id        String   @id @default(uuid())
+  claimId   String
+  type      String
+  message   String
+  createdAt DateTime @default(now())
+
+  claim     Claim    @relation(fields: [claimId], references: [id], onDelete: Cascade)
+}
