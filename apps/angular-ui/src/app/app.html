@@ -1,0 +1,114 @@
+<main class="page">
+  <h1>Hanover Claims (Angular)</h1>
+
+  <section class="panel">
+    <h2>Create claim</h2>
+    <form class="form-grid" [formGroup]="form" (ngSubmit)="submit()">
+      <label>
+        Line of business
+        <select formControlName="lob">
+          @for (lob of lobs; track lob) {
+            <option [value]="lob">{{ lob }}</option>
+          }
+        </select>
+      </label>
+
+      <label>
+        Priority
+        <select formControlName="priority">
+          @for (priority of priorities; track priority) {
+            <option [value]="priority">{{ priority }}</option>
+          }
+        </select>
+      </label>
+
+      <label>
+        Policy #
+        <input formControlName="policyNumber" [class.invalid-input]="isInvalid('policyNumber')" />
+        @if (fieldError('policyNumber'); as msg) {
+          <small class="field-error">{{ msg }}</small>
+        }
+      </label>
+
+      <label>
+        Insured name
+        <input formControlName="insuredName" [class.invalid-input]="isInvalid('insuredName')" />
+        @if (fieldError('insuredName'); as msg) {
+          <small class="field-error">{{ msg }}</small>
+        }
+      </label>
+
+      <label>
+        Loss date
+        <input type="date" formControlName="lossDate" [class.invalid-input]="isInvalid('lossDate')" />
+        @if (fieldError('lossDate'); as msg) {
+          <small class="field-error">{{ msg }}</small>
+        }
+      </label>
+
+      <label>
+        Loss type
+        <input formControlName="lossType" [class.invalid-input]="isInvalid('lossType')" />
+        @if (fieldError('lossType'); as msg) {
+          <small class="field-error">{{ msg }}</small>
+        }
+      </label>
+
+      <label>
+        Contact email
+        <input
+          type="email"
+          formControlName="contactEmail"
+          [class.invalid-input]="isInvalid('contactEmail')"
+        />
+        @if (fieldError('contactEmail'); as msg) {
+          <small class="field-error">{{ msg }}</small>
+        }
+      </label>
+
+      <label class="full-width">
+        Description
+        <textarea
+          rows="4"
+          formControlName="description"
+          [class.invalid-input]="isInvalid('description')"
+        ></textarea>
+        @if (fieldError('description'); as msg) {
+          <small class="field-error">{{ msg }}</small>
+        }
+      </label>
+
+      <button type="submit" [disabled]="saving">
+        {{ saving ? 'Submitting...' : 'Submit claim' }}
+      </button>
+    </form>
+  </section>
+
+  <section class="panel">
+    <h2>Recent claims</h2>
+
+    @if (loading) {
+      <p>Loading...</p>
+    }
+
+    @if (!loading && claims.length === 0) {
+      <p>No claims yet.</p>
+    }
+
+    @if (!loading && claims.length > 0) {
+      <ul class="claim-list">
+        @for (claim of claims; track claim.id) {
+          <li>
+            <strong>{{ claim.claimNumber }}</strong>
+            <span>{{ claim.insuredName }}</span>
+            <span>{{ claim.lob }} | {{ claim.status }} | {{ claim.priority }}</span>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+
+  @if (error) {
+    <p class="error">{{ error }}</p>
+  }
+</main>
