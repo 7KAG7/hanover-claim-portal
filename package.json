@@ -1,12 +1,15 @@
 {
+  "name": "hanover-claim-portal",
+  "private": true,
   "devDependencies": {
     "typescript": "^5.9.3"
   },
   "type": "module",
   "scripts": {
-    "dev": "PORT=3000 tsx watch src/server.ts",
-    "build": "tsc -p tsconfig.json",
-    "start": "node dist/server.js",
-    "prisma": "prisma"
+    "dev:api": "pnpm --filter api dev",
+    "dev:react": "pnpm --filter react-ui dev",
+    "build": "pnpm -r build",
+    "start:api": "pnpm --filter api start",
+    "prisma": "pnpm --filter api prisma"
   }
 }
