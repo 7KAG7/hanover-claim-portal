@@ -8,7 +8,9 @@
   "scripts": {
     "dev:api": "pnpm --filter api dev",
     "dev:react": "pnpm --filter react-ui dev",
+    "dev:angular": "pnpm --filter angular-ui start",
     "build": "pnpm -r build",
+    "test:api": "pnpm --filter api test",
     "start:api": "pnpm --filter api start",
     "prisma": "pnpm --filter api prisma"
   }

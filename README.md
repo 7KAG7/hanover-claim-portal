@@ -89,7 +89,6 @@ Implemented features:
 - Claim creation form
 - Inline client-side field validation
 - Future-date check before submission
-- Hanover-style visual theme and React favicon
 
 ### 4. Angular App (`apps/angular-ui`)
 
@@ -132,29 +131,102 @@ Query support:
 Response shape:
 - `{ page, pageSize, total, items }`
 
-## Run Locally
+## Local Setup: DB + Localhosts
 
-From repo root:
+Run everything from repo root unless noted.
+
+### 1. Install dependencies
 
 ```bash
 pnpm install
+```
+
+### 2. Setup database (API / Prisma)
+
+Generate Prisma client:
+
+```bash
 pnpm --dir apps/api prisma generate
+```
+
+Apply migrations to local SQLite DB:
+
+```bash
 pnpm --dir apps/api prisma migrate dev --name init
 ```
 
-Run services in separate terminals:
+Notes:
+- Database file is local SQLite (`apps/api/dev.db` via `DATABASE_URL=file:./dev.db`).
+- If migrations already exist, Prisma will report database is up to date.
+
+### 3. Start backend localhost
+
+Terminal A:
 
 ```bash
 pnpm --dir apps/api run dev
+```
+
+Backend URLs:
+- API base: `http://localhost:3000`
+- Health check: `http://localhost:3000/health`
+- Swagger docs: `http://localhost:3000/docs`
+
+### 4. Start React localhost
+
+Terminal B:
+
+```bash
 pnpm --dir apps/react-ui run dev
+```
+
+React URL:
+- `http://localhost:5173`
+
+### 5. Start Angular localhost
+
+Terminal C:
+
+```bash
 pnpm --dir apps/angular-ui run start
 ```
 
-URLs:
-- API: `http://localhost:3000`
-- API docs: `http://localhost:3000/docs`
-- React UI: `http://localhost:5173`
-- Angular UI: `http://localhost:4200`
+Angular URL:
+- `http://localhost:4200`
+
+### 6. Quick verification
+
+Health check:
+
+```bash
+curl http://localhost:3000/health
+```
+
+Sample claim submit:
+
+```bash
+curl -X POST http://localhost:3000/claims \
+  -H "content-type: application/json" \
+  -d '{
+    "lob": "Personal Auto",
+    "policyNumber": "PA-123456",
+    "insuredName": "Jordan Smith",
+    "lossDate": "2026-02-14",
+    "lossType": "Collision",
+    "description": "Rear-ended at a stoplight. Minor bumper damage.",
+    "contactEmail": "jordan.smith@example.com",
+    "priority": "MEDIUM"
+  }'
+```
+
+### 7. Optional shortcut scripts (root)
+
+```bash
+pnpm dev:api
+pnpm dev:react
+pnpm dev:angular
+pnpm test:api
+```
 
 ## Interview Walkthrough (Suggested)
 
